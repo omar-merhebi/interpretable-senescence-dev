@@ -26,3 +26,4 @@ RUN groupadd --gid ${USER_GID} ${USERNAME} \
 USER ${USERNAME}
 WORKDIR /workspace
 ENV PATH="/home/dev/.local/bin:${PATH}"
+ENV DATA_ROOT=/data

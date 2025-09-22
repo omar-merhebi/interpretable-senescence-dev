@@ -12,6 +12,12 @@
     "--gpus", "all"
   ],
   "remoteUser": "",
+  "mounts": [
+    "source=${env:LOCAL_DATA_ROOT},target=/data,type=bind"
+  ],
+  "remoteEnv": {
+    "DATA_ROOT": "/data"
+  },
   "features": {},
   "customizations": {
     "vscode": {
