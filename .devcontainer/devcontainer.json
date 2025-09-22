@@ -1,0 +1,30 @@
+{
+  "name": "CUDA Devcontainer",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".",
+    "args": {"CUDA_VER": "12.4.1"}
+  },
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "runArgs": [
+    // Enable GPU in Docker
+    "--gpus", "all"
+  ],
+  "remoteUser": "",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/usr/bin/python3"
+      },
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-python.python",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "postCreateCommand": "python3 -m pip install --upgrade pip"
+}
