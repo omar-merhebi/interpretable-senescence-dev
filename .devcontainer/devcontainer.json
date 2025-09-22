@@ -15,7 +15,7 @@
   "mounts": [
     "source=${env:LOCAL_DATA_ROOT},target=/data,type=bind"
   ],
-  "remoteEnv": {
+  "containerEnv": {
     "DATA_ROOT": "/data"
   },
   "features": {},
