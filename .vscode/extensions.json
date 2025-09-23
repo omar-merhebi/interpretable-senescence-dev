@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+
+    // --- Core essentials --
+    "ms-python.python",             // Core Python support
+    "ms-azuretools.vscode-docker",  
+    "ms-python.autopep8",           // Formatter (if your project uses autopep8)
+    "ms-azuretools.vscode-containers", 
+    "ms-toolsai.jupyter",
+    "nextflow.nextflow",
+
+    // -- Optional extras (uncomment if desired) -- 
+    "njpwerner.autodocstring", 
+    "ms-toolsai.datawrangler",
+    "Gruntfuggly.todo-tree"
+  ]
+}
