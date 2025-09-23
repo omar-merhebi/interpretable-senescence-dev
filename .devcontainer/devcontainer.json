@@ -32,5 +32,5 @@
       ]
     }
   },
-  "postCreateCommand": "python3 -m pip install --upgrade pip"
+  "postCreateCommand": "python3 -m pip install --upgrade pip && cat requirements.txt | xargs -n 1 pip install"
 }
