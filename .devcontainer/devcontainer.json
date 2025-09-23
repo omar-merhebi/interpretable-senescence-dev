@@ -1,24 +1,11 @@
 {
   "name": "CUDA Devcontainer",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": ".",
-    "args": {"CUDA_VER": "12.4.1"}
-  },
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
   "workspaceFolder": "/workspace",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
-  "runArgs": [
-    // Enable GPU in Docker
-    "--gpus", "all"
-  ],
-  "remoteUser": "",
-  "mounts": [
-    "source=${env:LOCAL_DATA_ROOT},target=/data,type=bind"
-  ],
-  "containerEnv": {
-    "DATA_ROOT": "/data"
-  },
-  "features": {},
+  "runServices": ["app"],
+  "overrideCommand": false,
+
   "customizations": {
     "vscode": {
       "settings": {
@@ -32,5 +19,6 @@
       ]
     }
   },
-  "postCreateCommand": "chmod +x /workspace/.devcontainer/setup.sh && sh /workspace/.devcontainer/setup.sh",
+
+  "postCreateCommand": "chmod +x /workspace/.devcontainer/setup.sh && sh /workspace/.devcontainer/setup.sh"
 }

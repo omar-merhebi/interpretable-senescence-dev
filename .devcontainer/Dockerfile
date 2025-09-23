@@ -9,7 +9,7 @@ ARG USER_GID=1000
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git curl ca-certificates build-essential cmake pkg-config \
-    python3 python3-pip python3-venv openjdk-17-jdk\
+    python3 python3-pip python3-venv openjdk-17-jdk python-is-python3\
     && rm -rf /var/lib/apt/lists/*
 
 # Create user
