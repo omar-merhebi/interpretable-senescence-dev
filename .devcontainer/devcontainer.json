@@ -32,5 +32,5 @@
       ]
     }
   },
-  "postCreateCommand": "./devcontainer/setup.sh"
+  "postCreateCommand": "chmod +x /workspace/.devcontainer/setup.sh && sh /workspace/.devcontainer/setup.sh",
 }
