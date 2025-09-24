@@ -1,2 +1,6 @@
 .env
 .vscode/settings.json
+nextflow/work
+nextflow/.nextflow/
+nextflow/.nextflow.log*
+logs/
