@@ -10,15 +10,17 @@ if [[ -n "${GIT_NAME:-}" ]]; then
     git config --global user.name "$GIT_NAME"
     log "Git username set as $GIT_NAME"
 else
-    log "Skipped setting git username..."
+    log "No git username env variable found, skipping setting git username..."
 fi
 
 if [[ -n "${GIT_EMAIL:-}" ]]; then
     git config --global user.email "$GIT_EMAIL"
     log "Git Email set as $GIT_EMAIL"
 else
-    log "Skipped setting git email..."
+    log "No git email env variable found, skipping setting git email..."
 fi
+
+mkdir -p /workspace/logs
 
 log "Upgrading pip and installing Python dependencies..."
 python3 -m pip install --upgrade pip 

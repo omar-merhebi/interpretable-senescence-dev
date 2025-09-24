@@ -12,6 +12,7 @@
     // -- Optional extras (uncomment if desired) -- 
     "njpwerner.autodocstring", 
     "ms-toolsai.datawrangler",
-    "Gruntfuggly.todo-tree"
+    "Gruntfuggly.todo-tree",
+    "ms-vscode.live-server"
   ]
 }
