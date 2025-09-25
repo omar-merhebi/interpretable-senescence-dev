@@ -7,7 +7,6 @@
     "ms-python.autopep8",           // Formatter (if your project uses autopep8)
     "ms-azuretools.vscode-containers", 
     "ms-toolsai.jupyter",
-    "nextflow.nextflow",
 
     // -- Optional extras (uncomment if desired) -- 
     "njpwerner.autodocstring", 
