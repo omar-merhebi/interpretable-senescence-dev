@@ -2,9 +2,7 @@
 .vscode/settings.json
 
 # Nextflow
-nextflow/work
-nextflow/.nextflow/cache/*
-nextflow/.nextflow.log*
+nextflow/*
 logs/*
 .nextflow*
 work/*
