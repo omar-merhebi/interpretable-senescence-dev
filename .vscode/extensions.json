@@ -12,6 +12,7 @@
     "njpwerner.autodocstring", 
     "ms-toolsai.datawrangler",
     "Gruntfuggly.todo-tree",
-    "ms-vscode.live-server"
+    "ms-vscode.live-server",
+    "mechatroner.rainbow-csv"
   ]
 }
