@@ -2,8 +2,8 @@
 services:
   app:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
       args:
         CUDA_VER: "12.4.1"
     # Keep container alive
@@ -14,6 +14,6 @@ services:
     tty: true
     volumes:
       - ../:/workspace:cached
-      - ${LOCAL_DATA_ROOT:?Set LOCAL_DATA_ROOT in .devcontainer/.env (absolute WSL path)}:/data
+      - ${DATA_DIR:?Set DATA_DIR in .devcontainer/.env (absolute WSL path)}:/data
     
     gpus: all

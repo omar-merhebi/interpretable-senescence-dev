@@ -15,19 +15,17 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 RUN groupadd --gid ${USER_GID} ${USERNAME} \
  && useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME}
 
-# (Optional) CUDA toolkit headers if you compile kernels:
-# RUN apt-get update && apt-get install -y cuda-toolkit-12-4 && rm -rf /var/lib/apt/lists/*
-
-# Python deps example (adjust to your project)
-# COPY requirements.txt /tmp/requirements.txt
-# RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
-
 USER ${USERNAME}
 WORKDIR /workspace
 ENV PATH="/home/dev/.local/bin:${PATH}"
 ENV DATA_ROOT=/data
 
+COPY requirements.txt /tmp/requirements.txt
 RUN mkdir -p /workspace/logs
-RUN python3 -m pip install upgrade pip
-RUN cat /workspace/requirements.txt | xargs -n 1 pip install
-RUN ln -s /data /workspace/
+RUN python3 -m pip install --upgrade pip
+RUN sed -e 's/\r$//' /tmp/requirements.txt \
+    | grep -vE '^\s*#|^\s*$' \
+    | xargs -r -I{} sh -lc 'pip install --no-cache-dir "{}" || echo "{}" >> /tmp/pip_failures.txt' \
+    && if [ -s /tmp/pip_failures.txt ]; then \
+        echo "[WARNING] The following packages failed to install:" && cat /tmp/pip_failures.txt; \
+    fi
