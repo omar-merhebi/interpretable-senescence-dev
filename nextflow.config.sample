@@ -1,0 +1,45 @@
+// nextflow.config
+manifest {
+    mainScript  = 'nextflow/main.nf'
+}
+
+profiles {
+    // ---- Local dev with Docker (inside CUDA Devcontainer) ---
+    local {
+        process {
+            executor    = 'local'
+            container   = 'ghcr.io/omar-merhebi/interpretable-senescence-container:latest'
+        }
+        docker {
+            enabled     = true
+            runOptions  = "--gpus all"
+        }
+    }
+}
+
+params {
+    logdir      = "${baseDir}/logs"
+    outdir      = "${baseDir}/../data"
+}
+
+timeline {
+    enabled     = true
+    overwrite   = true
+    file        = "${params.logdir}/timeline.html"
+}
+
+trace {
+    enabled     = true
+    overwrite   = true
+    file        = "${params.logdir}/trace.txt"
+}
+
+report {
+    enabled     = true
+    overwrite   = true
+    file        = "${params.logdir}/report.html"
+}
+
+weblog.enabled = false
+workDir = "${baseDir}/../data/nextflow"
+cleanup = true
