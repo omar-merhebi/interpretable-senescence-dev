@@ -19,12 +19,3 @@ if [[ -n "${GIT_EMAIL:-}" ]]; then
 else
     log "No git email env variable found, skipping setting git email..."
 fi
-
-mkdir -p /workspace/logs
-
-log "Upgrading pip and installing Python dependencies..."
-python3 -m pip install --upgrade pip 
-cat /workspace/requirements.txt | xargs -n 1 pip install
-log "Creating symlink to data directory..."
-ln -s /data /workspace/
-log "Setup complete"

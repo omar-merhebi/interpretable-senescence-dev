@@ -1,8 +1,7 @@
-# Pick a CUDA runtime that matches (or is below) your host driver capability.
-# Example: CUDA 12.4 on Ubuntu 22.04
+
 FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
 
-# (Optional) Set a non-root user to avoid permission issues in containers & HPC
+# Set a non-root user to avoid permission issues in containers & HPC
 ARG USERNAME=dev
 ARG USER_UID=1000
 ARG USER_GID=1000
@@ -27,3 +26,8 @@ USER ${USERNAME}
 WORKDIR /workspace
 ENV PATH="/home/dev/.local/bin:${PATH}"
 ENV DATA_ROOT=/data
+
+RUN mkdir -p /workspace/logs
+RUN python3 -m pip install upgrade pip
+RUN cat /workspace/requirements.txt | xargs -n 1 pip install
+RUN ln -s /data /workspace/
