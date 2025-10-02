@@ -1,0 +1,67 @@
+import java.nio.file.Paths
+
+def repoRoot = Paths.get(projectDir as String).getParent().toString()
+
+params {
+  reporoot = "${repoRoot}"
+  logdir    = "${repoRoot}/logs"
+  outdir    = "${repoRoot}/data"        // was ${baseDir}/../data; this is equivalent but explicit
+  datadir  = "${repoRoot}/data"        // ✅ repo-root data by default
+  container = 'ghcr.io/omar-merhebi/interpretable-senescence-container:latest'
+}
+
+weblog.enabled = false
+cleanup = false
+
+process {
+  withName:/.*/ {
+    container = params.container
+    shell = ['/bin/bash','-euo','pipefail',]
+  }
+
+  scratch       = true
+  stageInMode   = 'copy'
+  stageOutMode  = 'copy'
+}
+
+profiles {
+  // ---- Local dev with Docker (repo mounted at /workspace, data at /data) ----
+  engine_docker {
+    process { executor = 'local' }
+    docker {
+      enabled    = true
+      // repo -> /workspace (RO), data -> /data (RW)
+      runOptions = "--gpus all"
+    }
+    params {
+      // keep data in repo-root/data for this profile
+      data_dir = "${repoRoot}/data"
+    }
+  }
+
+  // Example: a profile that points at SSHFS storage instead
+  data_sshfs {
+    params {
+      data_dir = "/mnt/sshfs/work/projects/senescence/data"
+    }
+  }
+}
+
+report {
+  enabled   = true
+  overwrite = true
+  file      = "${params.logdir}/report.html"
+}
+timeline {
+  enabled   = true
+  overwrite = true
+  file      = "${params.logdir}/timeline.html"
+}
+trace {
+  enabled   = true
+  overwrite = true
+  fields    = 'task_id,process,tag,exit,status,workdir,hash,container'
+  file      = "${params.logdir}/trace_with_publish.txt"
+}
+
+workDir = "${params.data_dir}/nextflow-work"
