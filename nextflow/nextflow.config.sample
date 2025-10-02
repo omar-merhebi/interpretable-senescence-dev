@@ -42,7 +42,7 @@ profiles {
   // Example: a profile that points at SSHFS storage instead
   data_sshfs {
     params {
-      data_dir = "/mnt/sshfs/work/projects/senescence/data"
+      data_dir = "/path/to/data"
     }
   }
 }
