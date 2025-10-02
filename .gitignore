@@ -2,7 +2,8 @@
 .vscode/settings.json
 
 # Nextflow
-nextflow/*
+nextflow/.nextflow/*
 logs/*
-.nextflow*
 work/*
+.nextflow*
+nextflow.config
