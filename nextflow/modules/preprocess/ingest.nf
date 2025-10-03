@@ -1,8 +1,8 @@
 nextflow.enable.dsl=2
 
 process ADATA_TO_TABLES {
-    cpus 2
-    memory '4 GB'
+    cpus 1
+    memory '1 GB'
     time '2h'
 
     input:
@@ -17,7 +17,7 @@ process ADATA_TO_TABLES {
 
     publishDir "${params.outdir}", mode: 'link', saveAs: { fname ->
         if (fname == 'cells_raw_vals.csv') {
-            "processed/base_tables/${fname}"
+            "processed/tabular/${fname}"
         } else if (fname in ['cells_metadata.csv','well_mapping.csv','treatment_mapping.csv']) {
             "metadata/${fname}"
         } else {
@@ -27,23 +27,9 @@ process ADATA_TO_TABLES {
 
     script:
     """
-    echo "DEBUG: projectDir=${projectDir}"
-    echo "DEBUG: launchDir=${launchDir}"
-    echo "DEBUG: params.reporoot=${params.reporoot}"
-    echo "DEBUG: params.logdir=${params.logdir}"
-    echo "DEBUG: params.datadir=${params.datadir}"
-    echo "DEBUG: params.outsidr=${params.outdir}"
-    ls -la src || true
-    pwd
-
     python ${ingest_script} \\
         --adata ${adata} \
         --metadir . \
         --outdir .
-
-    echo '--- AFTER PY SCRIPT ---'
-    pwd
-    ls -lah || true
-    find . -maxdepth 2 -type f -print || true
     """
 }
