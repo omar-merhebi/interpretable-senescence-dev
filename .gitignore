@@ -1,6 +1,7 @@
 .vscode/settings.json
 .cache/*
 .env
+data
 
 # Nextflow
 nextflow/.nextflow/*
