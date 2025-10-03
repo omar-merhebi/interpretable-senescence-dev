@@ -19,5 +19,3 @@ if [[ -n "${GIT_EMAIL:-}" ]]; then
 else
     log "No git email env variable found, skipping setting git email..."
 fi
-
-ln -sf /data /workspace/data
