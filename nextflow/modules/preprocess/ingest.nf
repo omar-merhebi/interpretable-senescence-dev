@@ -2,7 +2,7 @@ nextflow.enable.dsl=2
 
 process ADATA_TO_TABLES {
     cpus 1
-    memory '1 GB'
+    memory '4 GB'
     time '1h'
 
     input:

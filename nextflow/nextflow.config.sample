@@ -9,6 +9,11 @@ params {
   datadir   = "${repoRoot}/data"        // ✅ repo-root data by default
   container = 'ghcr.io/omar-merhebi/interpretable-senescence-container:latest'
   seed      = 416
+
+  norm = [
+    znorm   : true
+    minmax  : true
+  ]
 }
 
 weblog.enabled  = false
