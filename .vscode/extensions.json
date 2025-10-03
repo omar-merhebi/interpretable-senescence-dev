@@ -9,6 +9,7 @@
     "ms-toolsai.jupyter",
 
     // -- Optional extras (uncomment if desired) -- 
+    "ms-python.flake8",
     "njpwerner.autodocstring", 
     "ms-toolsai.datawrangler",
     "Gruntfuggly.todo-tree",
