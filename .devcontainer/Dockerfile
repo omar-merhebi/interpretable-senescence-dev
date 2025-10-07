@@ -14,6 +14,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git curl ca-certificates build-essential cmake pkg-config \
     python3 python3-pip python3-venv python-is-python3\
+    r-base r-base-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp/build
