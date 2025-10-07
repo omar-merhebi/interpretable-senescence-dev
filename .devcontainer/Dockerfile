@@ -19,6 +19,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 WORKDIR /tmp/build
 COPY requirements.txt /tmp/build/requirements.txt
+
+RUN Rscript -e 'install.packages("remotes")'
+RUN Rscript -e 'remotes::install_github("theislab/kBET")'
 RUN python3 -m pip install --upgrade pip \
  && sed -e 's/\r$//' /tmp/build/requirements.txt \
     | grep -vE '^\s*#|^\s*$' \
