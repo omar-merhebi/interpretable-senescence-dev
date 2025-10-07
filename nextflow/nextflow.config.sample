@@ -5,8 +5,8 @@ def repoRoot  = Paths.get(projectDir as String).getParent().toString()
 params {
   reporoot  = "${repoRoot}"
   logdir    = "${repoRoot}/logs"
-  outdir    = "${repoRoot}/data"        // was ${baseDir}/../data; this is equivalent but explicit
-  datadir   = "${repoRoot}/data"        // ✅ repo-root data by default
+  outdir    = "${repoRoot}/data"        
+  datadir   = "${repoRoot}/data"        // repo-root data by default
   container = 'ghcr.io/omar-merhebi/interpretable-senescence-container:latest'
   seed      = 416
 
