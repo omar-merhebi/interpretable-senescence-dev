@@ -2,8 +2,6 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-EXT_FILE="${EXTENSIONS_FILE:-"/workspace/.devcontainer/extensions.txt"}"
-
 log() { printf '[setup] %s\n' "$*"; }
 
 if [[ -n "${GIT_NAME:-}" ]]; then

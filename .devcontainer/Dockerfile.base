@@ -1,0 +1,88 @@
+# syntax=docker/dockerfile:1.5
+
+######################################
+# Stage 1: build a wheelhouse offline
+######################################
+FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04 AS wheels
+
+# Noninteractive & Python defaults
+ENV DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_ROOT_USER_ACTION=ignore \
+    PYTHONDONTWRITEBYTECODE=1
+
+# tzdata setup to avoid interactive prompt
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ >/etc/timezone
+
+# System deps for building *wheels* (sdists) such as pycairo/PyGObject/dbus-python
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      tzdata \
+      python3 python3-pip python3-venv python-is-python3 python3-dev \
+      git curl ca-certificates build-essential cmake pkg-config \
+      meson ninja-build \
+      libcairo2-dev libgirepository1.0-dev gobject-introspection \
+      libdbus-1-dev libglib2.0-dev \
+      r-base r-base-dev \
+    && dpkg-reconfigure -f noninteractive tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /tmp
+COPY requirements.txt /tmp/requirements.txt
+
+# Conservative pip defaults (retries/timeouts)
+RUN mkdir -p /etc/pip.conf.d \
+ && printf "[global]\nretries = 3\ntimeout = 60\nprogress-bar = off\n" > /etc/pip.conf.d/00-defaults.conf
+
+# Build wheels for everything into /opt/wheels (with retries & cache)
+RUN --mount=type=cache,target=/root/.cache/pip bash -euxo pipefail -c '\
+  for i in 1 2; do \
+    python3 -m pip install -U pip wheel && \
+    python3 -m pip wheel -r /tmp/requirements.txt -w /opt/wheels && exit 0 || true; \
+    echo "pip wheel failed (attempt $i), retrying..."; \
+    sleep 10; \
+  done; \
+  echo "FATAL: pip wheel failed after retries" >&2; exit 1'
+
+########################################
+# Stage 2: final base (installs offline)
+########################################
+FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
+
+# Noninteractive + sane Python env
+ENV DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_ROOT_USER_ACTION=ignore \
+    PYTHONDONTWRITEBYTECODE=1
+
+# tzdata first to avoid prompt
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ >/etc/timezone
+
+# Install runtime deps + Python + R (no dev toolchain needed here)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      tzdata \
+      python3 python3-pip python3-venv python-is-python3 \
+      git curl ca-certificates build-essential cmake pkg-config \
+      r-base r-base-dev \
+      libcairo2 libgirepository-1.0-1 gobject-introspection \
+      libdbus-1-3 libglib2.0-0 \
+  && dpkg-reconfigure -f noninteractive tzdata \
+  && rm -rf /var/lib/apt/lists/*
+
+# Keep pip log
+RUN mkdir -p /var/log && touch /var/log/pip-install.log
+
+# R packages (with retries)
+RUN Rscript -e 'install.packages("remotes", repos="https://cloud.r-project.org")' \
+ && bash -lc 'for pkg in "theislab/kBET" "immunogenomics/lisi"; do \
+        for i in 1 2; do \
+          Rscript -e "remotes::install_github(\"$pkg\")" && break || sleep 10; \
+        done; \
+      done'
+
+WORKDIR /tmp/build
+COPY requirements.txt /tmp/build/requirements.txt
+COPY --from=wheels /opt/wheels /opt/wheels
+
+# Offline install from local wheelhouse (no network)
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python3 -m pip install -U pip 2>&1 | tee -a /var/log/pip-install.log && \
+    python3 -m pip install --no-index --find-links=/opt/wheels -r /tmp/build/requirements.txt \
+    2>&1 | tee -a /var/log/pip-install.log

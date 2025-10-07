@@ -1,0 +1,17 @@
+ARG BASE_IMAGE=ghcr.io/omar-merhebi/interpretable-senescence-container:latest
+FROM ${BASE_IMAGE}
+
+# Dev-only/user bits; NO pip here
+ARG USERNAME=dev
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+RUN groupadd --gid ${USER_GID} ${USERNAME} \
+ && useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} \
+ && mkdir -p /workspace /data /workspace/logs \
+ && chown -R ${USERNAME}:${USER_GID} /workspace /data
+
+USER ${USERNAME}
+WORKDIR /workspace
+ENV PATH="/home/${USERNAME}/.local/bin:${PATH}"
+ENV DATA_ROOT=/data
