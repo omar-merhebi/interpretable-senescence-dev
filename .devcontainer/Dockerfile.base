@@ -21,7 +21,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       meson ninja-build \
       libcairo2-dev libgirepository1.0-dev gobject-introspection \
       libdbus-1-dev libglib2.0-dev \
-      r-base r-base-dev \
     && dpkg-reconfigure -f noninteractive tzdata \
     && rm -rf /var/lib/apt/lists/*
 
@@ -68,14 +67,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Keep pip log
 RUN mkdir -p /var/log && touch /var/log/pip-install.log
-
-# R packages (with retries)
-RUN Rscript -e 'install.packages("remotes", repos="https://cloud.r-project.org")' \
- && bash -lc 'for pkg in "theislab/kBET" "immunogenomics/lisi"; do \
-        for i in 1 2; do \
-          Rscript -e "remotes::install_github(\"$pkg\")" && break || sleep 10; \
-        done; \
-      done'
 
 WORKDIR /tmp/build
 COPY requirements.txt /tmp/build/requirements.txt
