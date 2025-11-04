@@ -14,5 +14,5 @@ services:
     tty: true
     volumes:
       - ../:/workspace:cached
-      - ${DATA_DIR:?Set DATA_DIR in .devcontainer/.env (absolute WSL path)}:/data
+      # - ${DATA_DIR:?Set DATA_DIR in .devcontainer/.env (absolute WSL path)}:/data
     gpus: all
