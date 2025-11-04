@@ -8,7 +8,8 @@ FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04 AS wheels
 # Noninteractive & Python defaults
 ENV DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC \
     PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_ROOT_USER_ACTION=ignore \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    RPY2_CFFI_MODE=ABI
 
 # tzdata setup to avoid interactive prompt
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ >/etc/timezone
@@ -67,6 +68,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Keep pip log
 RUN mkdir -p /var/log && touch /var/log/pip-install.log
+ENV R_HOME=/usr/lib/R
 
 WORKDIR /tmp/build
 COPY requirements.txt /tmp/build/requirements.txt
