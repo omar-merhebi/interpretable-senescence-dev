@@ -17,7 +17,5 @@
         "ms-toolsai.jupyter"
       ]
     }
-  },
-
-  "postCreateCommand": "chmod +x /workspace/.devcontainer/setup.sh"
+  }
 }
