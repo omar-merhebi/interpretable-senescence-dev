@@ -14,5 +14,5 @@ services:
     tty: true
     volumes:
       - ../:/workspace:cached
-      - /mnt/sshfs/work/projects/senescence:/data:rw
+      - /mnt/sshfs/work/projects/senescence/data:/data:rw
     gpus: all
